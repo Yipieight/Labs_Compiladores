@@ -88,7 +88,7 @@ public class Parser implements IParser {
 
     @Override
     public boolean validateExpresion(List<TokenSymbol> tokens) throws Exception {
-        System.out.println("\n[PARSER] Iniciando análisis sintáctico");
+        System.out.println("\nIniciando análisis sintáctico");
         Stack<String> stack = new Stack<>();
         stack.push("S");
         int index = 0;
@@ -98,8 +98,8 @@ public class Parser implements IParser {
             String top = stack.pop();
             TokenSymbol currentToken = index < tokens.size() ? tokens.get(index) : new TokenSymbol("$", "$");
 
-            System.out.println("\n[PARSER] Stack: " + stack);
-            System.out.println("[PARSER] Token actual: " + currentToken.getType() + " -> " + currentToken.getValue());
+            System.out.println("\nStack: " + stack);
+            System.out.println("Token actual: " + currentToken.getType() + " -> " + currentToken.getValue());
 
             if (top.equals(currentToken.getType())) {
                 handleSemantics(top, currentToken.getValue());
@@ -109,7 +109,8 @@ public class Parser implements IParser {
                 List<String> production = parsingTable.get(top).get(currentToken.getType());
                 if (production == null) throw new Exception("Error sintáctico en: " + currentToken.getType());
 
-                System.out.println("[PARSER] Aplicando producción: " + top + " -> " + production);
+//                System.out.println("[PARSER] Aplicando producción: " + top + " -> " + production);
+                System.out.println("REDUCE: " + top + " -> " + production);
                 for (int i = production.size() - 1; i >= 0; i--) {
                     if (!production.get(i).equals("ε")) stack.push(production.get(i));
                 }
@@ -122,7 +123,8 @@ public class Parser implements IParser {
     }
 
     private void handleSemantics(String tokenType, String value) {
-        System.out.println("[SEMÁNTICO] Procesando: " + tokenType + " -> " + value);
+//        System.out.println("[SEMÁNTICO] Procesando: " + tokenType + " -> " + value);
+        System.out.println("ACCEPT: " + tokenType + " -> " + value);
 
         switch (tokenType) {
             case "TYPE":
@@ -131,7 +133,7 @@ public class Parser implements IParser {
 
             case "ID":
                 if (currentDeclarationType != null) {
-                    System.out.println("[SEMÁNTICO] Declarando variable: " + value + " tipo: " + currentDeclarationType);
+                    System.out.println("Declarando variable: " + value + " tipo: " + currentDeclarationType);
                     symbolTable.put(value, currentDeclarationType);
                 } else if (!symbolTable.containsKey(value)) {
                     throw new RuntimeException("Variable no declarada: " + value);
@@ -146,7 +148,7 @@ public class Parser implements IParser {
                     if (!currentDeclarationType.equals(expectedType)) {
                         throw new RuntimeException("Tipo incorrecto para " + value + ". Esperaba: " + currentDeclarationType);
                     }
-                    System.out.println("[SEMÁNTICO] Valor inicial válido: " + value + " para tipo " + currentDeclarationType);
+                    System.out.println("Valor inicial válido: " + value + " para tipo " + currentDeclarationType);
                 }
                 break;
 

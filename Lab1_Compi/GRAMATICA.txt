@@ -1,0 +1,5 @@
+bin animal B10101;
+hex perro H123FFF;
+oct koala O12341;
+
+(animal - koala) + perro
